@@ -1,3 +1,11 @@
+<script setup>
+
+window.addEventListener("message", e => {
+  console.log('Sin internet', e)
+})
+
+</script>
+
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
