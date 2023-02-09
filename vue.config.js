@@ -5,7 +5,7 @@ module.exports = defineConfig({
     name: "PWA Oventa",
     workboxPluginMode: "InjectManifest",
     workboxOptions: {
-      swSrc: "src/sw.js"
+      swSrc: "/src/sw.js"
     }
   }
 })
