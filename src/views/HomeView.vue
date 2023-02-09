@@ -3,14 +3,25 @@ import { onMounted,ref } from 'vue';
 
 const products = ref([])
 const productsSearch =  ref('')
+const listProducts = ref([])
 
 /*eslint-disable*/
 onMounted(async() => {
   fetch('https://dummyjson.com/products')
     .then(response => response.json())
     .then(data => {
-      products.value = data.products
       console.log(data.products);
+      products.value = data.products
+      listProducts.value = [];
+      for (let i = 0; i < products.value.length; i++) {
+        const element = products.value[i];
+        const product = {
+          id: element.id,
+          title: element.title,
+          img: element.thumbnail,
+        };
+        listProducts.value.push(product);
+      }
     })
     .catch(error => {
       console.error(error);
@@ -40,8 +51,8 @@ const search = (event) => {
     </div>
   </div>
 
-  <ul v-for="product in productsSearch" :key="product.id">
-    <li >{{ product.title }}</li>
+  <ul v-for="product in listProducts" :key="product.id">
+    <li >{{ product }}</li>
   </ul>
 </template>
 
