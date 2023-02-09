@@ -1,14 +1,5 @@
 <script setup>
 
-window.addEventListener("message", e => {
-  console.log('entra')
-  if(e.data.msg === "OFFLINE" ){
-    console.log('Sin internet', e)
-  }else{
-    console.log('no')
-  }
-})
-
 </script>
 
 <template>
