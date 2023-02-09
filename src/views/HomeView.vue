@@ -10,7 +10,7 @@ onMounted(async() => {
   fetch('https://dummyjson.com/products')
     .then(response => response.json())
     .then(data => {
-      console.log(data.products);
+      console.log('algo',data.products);
       products.value = data.products
       listProducts.value = [];
       for (let i = 0; i < products.value.length; i++) {
