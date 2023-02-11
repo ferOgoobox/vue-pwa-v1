@@ -1,60 +1,66 @@
-<script setup >
-import { onMounted,ref } from 'vue';
+<script setup>
+import axios from 'axios';
+import PouchDB from 'pouchdb';
+import { ref, onMounted } from 'vue'
 
-const products = ref([])
-const productsSearch =  ref('')
-const listProducts = ref([])
 
-/*eslint-disable*/
-onMounted(async() => {
-  fetch('https://dummyjson.com/products')
-    .then(response => response.json())
-    .then(data => {
-      console.log('algo',data.products);
-      products.value = data.products
-      listProducts.value = [];
-      for (let i = 0; i < products.value.length; i++) {
-        const element = products.value[i];
-        const product = {
-          id: element.id,
-          title: element.title,
-          img: element.thumbnail,
-        };
-        listProducts.value.push(product);
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
-})
+// const search = (event) => {
+//   const text = event.target.value;
+//     productsSearch.value = products.value;
+//     if(text && text.trim() != ''){
+//       productsSearch.value = products.value.filter((product)=>{
+//         return (product.title.toLowerCase().indexOf(text.toLowerCase()) > -1);
+//       })
+//     }else{
+//       productsSearch.value = []
+//     }
+// }
 
-const search = (event) => {
-  const text = event.target.value;
-    productsSearch.value = products.value;
-    if(text && text.trim() != ''){
-      productsSearch.value = products.value.filter((product)=>{
-        return (product.title.toLowerCase().indexOf(text.toLowerCase()) > -1);
+const items = ref([]);
+let db;
+
+  onMounted(() => {
+    db = new PouchDB('products');
+    loadFromDB();
+  })
+
+  const loadProducts = async() => {
+    const response = await axios.get('https://dummyjson.com/products');
+    const products =  response.data.products;
+    products.forEach(async product => {
+        await db.put({
+        _id: JSON.stringify(product.id),
+        title: product.title
+      }).then(response => {
+        console.log(response)
+
+      }).catch(error => {
+        console.log(error)
       })
-    }else{
-      productsSearch.value = []
-    }
 
-}
-/*eslint-disable*/
+    });
+    loadFromDB();
+  }
+
+  const loadFromDB = async() => {
+    const docs = await db.allDocs({ include_docs: true });
+    items.value = docs.rows.map(row => row.doc);
+  }
 </script>
 
 <template>
-   <div class="home">
+  <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <div>
-      <input type="text"  @input="search($event)"  placeholder="Ingresa el producto">
-    </div>
-  </div>
 
-  <ul v-for="product in listProducts" :key="product.id">
-    <li >{{ product }}</li>
-  </ul>
+    <h1>Productos</h1>
+    <button @click="loadProducts">Cargar productos</button>
+    <ul>
+      <li v-for="item in items" :key="item._id">{{ item.title }}</li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
 </style>
+
+
