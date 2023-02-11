@@ -43,7 +43,6 @@ let db;
   // }
 
   const search = (event) => {
-    console.log('entrasearch')
     const text = event.target.value;
     productsSearch.value = items.value;
     if(text && text.trim() != ''){
@@ -79,9 +78,11 @@ let db;
     <h1>Productos</h1>
     <input type="text" @input="search($event)" placeholder="Ingresa un producto">
     <button @click="loadProducts">Cargar productos</button>
-    <ul>
+    {{ }}
+    <ul v-if="items.length !== 0">
       <li v-for="item in productsSearch" :key="item._id">{{ item.title }}</li>
     </ul>
+    <p v-else>No hay producos descargados</p>
   </div>
 </template>
 
