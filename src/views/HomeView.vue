@@ -13,6 +13,11 @@ let db;
 
   onMounted(() => {
     db = new PouchDB('products');
+    db.get('products').then(function (doc) {
+        items.value = doc.products;
+      }).catch(err => {
+        console.log('No hay productos descargados', err)
+      })
   })
 
   const loadProducts = async() => {
@@ -103,11 +108,13 @@ let db;
       // });
     })
     .catch(async err => {
-      console.log(err)
-      const docs = await db.allDocs({ include_docs: true });
-      items.value = docs.rows.map(row => row.doc);
-      console.log("🚀 ~ file: HomeView.vue:108 ~ loadProducts ~ items.value ", items.value )
-      console.log('Toma lo productos de pouchDB')
+      console.log('Toma lo productos de pouchDB', err)
+      db.get('products').then(function (doc) {
+        items.value = doc.products;
+        console.log(items.value)
+      }).catch(function (err) {
+        console.error(err);
+      })
     })
   }
 
@@ -151,7 +158,6 @@ let db;
     <h1>Productos</h1>
     <input type="text" @input="search($event)" placeholder="Ingresa un producto">
     <button @click="loadProducts">Cargar productos</button>
-    {{ }}
     <ul v-if="items.length !== 0">
       <li v-for="item in productsSearch" :key="item._id">{{ item.title }}</li>
     </ul>
