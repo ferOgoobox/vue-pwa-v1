@@ -12,7 +12,7 @@ import ListProducts from '@/components/ListProducts.vue';
 const items = ref([]);
 const productsSearch = ref([])
 const online = ref(false)
-const router = useRouter()
+// const router = useRouter()
 const myOrders = ref([])
 const orderForAdd = ref([])
 let db;
@@ -30,7 +30,6 @@ let db;
     await axios.get('https://dummyjson.com/products')
     .then(async response => {
       items.value = response.data.products
-      console.log("🚀 ~ file: HomeView.vue:22 ~ loadProducts ~ items.value 11", items.value)
       db.get('products').then(function(doc) {
         db.compact().then(function (result) {
           console.log('Base de datos comprimida exitosamente',result);
@@ -44,9 +43,8 @@ let db;
         });
       }).then(function(response) {
         console.log("🚀 ~ file: HomeView.vue:30 ~ db.get ~ response", response)
-        // handle response
       }).catch(function (err) {
-        console.log('nuevaaa', err)
+        console.log('nueva', err)
         return db.put({
           _id: 'products',
           products: response.data.products
@@ -57,7 +55,6 @@ let db;
       console.log('Toma lo productos de pouchDB', err)
       db.get('products').then(function (doc) {
         items.value = doc.products;
-        console.log(items.value)
       }).catch(function (err) {
         console.error(err);
       })
@@ -106,8 +103,7 @@ let db;
        online.value = true
     } else{
        online.value = false
-       router.push("/offline")
-
+       //router.push("/offline")
     }
   }
 
