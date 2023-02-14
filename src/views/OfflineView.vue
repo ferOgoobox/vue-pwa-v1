@@ -2,7 +2,7 @@
   import { useRouter } from 'vue-router';
   import { ref, onMounted} from 'vue';
   import { nanoid } from 'nanoid';
-  // import PouchDB from 'pouchdb';
+  import PouchDB from 'pouchdb';
 
 
 
