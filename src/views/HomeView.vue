@@ -3,11 +3,15 @@ import axios from 'axios';
 import PouchDB from 'pouchdb';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { nanoid } from 'nanoid';
+import moment from 'moment';
+import List from '@/components/List.vue';
 
 const items = ref([]);
 const productsSearch = ref([])
 const online = ref(false)
 const router = useRouter()
+const myOrders = ref([])
 let db;
 
   onMounted(() => {
@@ -73,6 +77,11 @@ let db;
     }
   }
 
+  const createOrder = () => {
+    const order = {'id': nanoid(6), 'client': 'Publico en general', 'estatus': 'Pendiente', 'date': moment().format() , 'total': 0, 'products': [] }
+    myOrders.value.push((order))
+  }
+
   // Detectar cambios de conexión
   function isOnline() {
     if ( navigator.onLine ) {
@@ -97,12 +106,21 @@ let db;
     <h4 v-else>Offline</h4>
 
     <h1>Productos</h1>
+    <div>
+      <button @click="loadProducts">Cargar productos</button>
+    </div>
     <input type="text" @input="search($event)" placeholder="Ingresa un producto">
-    <button @click="loadProducts">Cargar productos</button>
+    <button @click="createOrder">Crear Pedido</button>
     <ul v-if="items.length !== 0">
-      <li v-for="item in productsSearch" :key="item._id">{{ item.title }}</li>
+      <li v-for="item in productsSearch" :key="item._id" >
+        {{ item.title }}
+      </li>
     </ul>
     <p v-else>No hay producos descargados</p>
+  </div>
+
+  <div>
+    <List :orders="myOrders"></List>
   </div>
 </template>
 
