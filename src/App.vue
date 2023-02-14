@@ -1,7 +1,5 @@
 <script setup>
-
-import { RouterLink, RouterView } from 'vue-router'
-
+  import { RouterLink, RouterView } from 'vue-router';
 </script>
 
 <template>
@@ -10,7 +8,9 @@ import { RouterLink, RouterView } from 'vue-router'
     <router-link to="/about">About</router-link> |
     <router-link to="/offline">Offline</router-link>
   </nav>
-  <router-view/>
+  <div class="container text-center">
+    <RouterView />
+  </div>
 </template>
 
 <style>
