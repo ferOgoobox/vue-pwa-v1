@@ -15,6 +15,7 @@
   let db;
 
   onMounted(() => {
+    db = new PouchDB('products');
     db.get('products').then(async function (doc) {
         items.value = await doc.products;
       }).catch(err => {
@@ -81,9 +82,9 @@
     </div>
     <h1>This is an offline page</h1>
     <h2>Productos</h2>
-    <div>
+    <!-- <div>
       <button @click="loadProducts">Cargar productos</button>
-    </div>
+    </div> -->
     <p v-if="orderForAdd">{{ orderForAdd.id }}</p>
     <input type="text" @input="search($event)" placeholder="Ingresa un producto">
     <button @click="createOrder">Crear Pedido</button>
