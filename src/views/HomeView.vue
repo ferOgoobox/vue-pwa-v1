@@ -2,7 +2,7 @@
 import axios from 'axios';
 import PouchDB from 'pouchdb';
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import { nanoid } from 'nanoid';
 // import moment from 'moment';
 // import List from '@/components/List.vue';
