@@ -4,14 +4,17 @@ import PouchDB from 'pouchdb';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { nanoid } from 'nanoid';
-import moment from 'moment';
-import List from '@/components/List.vue';
+// import moment from 'moment';
+// import List from '@/components/List.vue';
+import ListComponent from '@/components/ListComponent.vue';
+import ListProducts from '@/components/ListProducts.vue';
 
 const items = ref([]);
 const productsSearch = ref([])
 const online = ref(false)
 const router = useRouter()
 const myOrders = ref([])
+const orderForAdd = ref([])
 let db;
 
   onMounted(() => {
@@ -66,6 +69,7 @@ let db;
   //   items.value = docs.rows.map(row => row.doc);
 
   const search = (event) => {
+    console.log('entra a search')
     const text = event.target.value;
     productsSearch.value = items.value;
     if(text && text.trim() != ''){
@@ -78,9 +82,23 @@ let db;
   }
 
   const createOrder = () => {
-    const order = {'id': nanoid(6), 'client': 'Publico en general', 'estatus': 'Pendiente', 'date': moment().format() , 'total': 0, 'products': [] }
+    // const order = {'id': nanoid(6), 'client': 'Publico en general', 'estatus': 'Pendiente', 'date': moment().format() , 'total': 0, 'products': [] }
+    const order = {'id': nanoid(6),'products': [] }
     myOrders.value.push((order))
   }
+
+  const orderSelected = (order) => {
+    orderForAdd.value = myOrders.value.find(x => x.id == order.id)
+  }
+
+  const productSelected = (product) => {
+    let valor = myOrders.value.find(x => x.id == orderForAdd.value.id)
+    let index = myOrders.value.indexOf(x => x.id == orderForAdd.value.id)
+    valor.products.push(product.title)
+    myOrders.value[index] = valor
+  }
+
+
 
   // Detectar cambios de conexión
   function isOnline() {
@@ -109,18 +127,18 @@ let db;
     <div>
       <button @click="loadProducts">Cargar productos</button>
     </div>
+    <p v-if="orderForAdd">{{ orderForAdd.id }}</p>
     <input type="text" @input="search($event)" placeholder="Ingresa un producto">
     <button @click="createOrder">Crear Pedido</button>
-    <ul v-if="items.length !== 0">
-      <li v-for="item in productsSearch" :key="item._id" >
-        {{ item.title }}
-      </li>
-    </ul>
+    <div v-if="items.length !== 0">
+      <ListProducts :products="productsSearch" @productSelected="productSelected"></ListProducts>
+    </div>
     <p v-else>No hay producos descargados</p>
   </div>
 
   <div>
-    <List :orders="myOrders"></List>
+    <!-- <List :orders="myOrders"></List> -->
+    <ListComponent :orders="myOrders" @orderSelected="orderSelected"></ListComponent>
   </div>
 </template>
 
