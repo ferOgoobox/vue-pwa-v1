@@ -1,17 +1,19 @@
 <script setup>
 import axios from 'axios';
 import PouchDB from 'pouchdb';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const items = ref([]);
 const productsSearch = ref([])
 const online = ref(false)
+const router = useRouter()
 let db;
 
   onMounted(() => {
     db = new PouchDB('products');
-    db.get('products').then(function (doc) {
-        items.value = doc.products;
+    db.get('products').then(async function (doc) {
+        items.value = await doc.products;
       }).catch(err => {
         console.log('No hay productos descargados', err)
       })
@@ -43,66 +45,6 @@ let db;
           products: response.data.products
         });
       });
-
-
-
-      // db.get('products_01').then(function(doc) {
-      //   console.log('ya existe', doc._rev);
-      //   doc.products = response.data.products;
-      //   return db.put(doc);
-      // }).catch(function (err) {
-      //   console.log('no existe',err);
-      //   return db.put({
-      //     _id: 'products_01',
-      //     products: response.data.products
-      //   });
-      // }).then(function(response) {
-      //   console.log(response);
-      // }).catch(function (err) {
-      //   console.log(err);
-      // });
-
-
-      // db.get('products_01').then(function (doc) {
-      //   console.log('ya existe')
-      //   doc.products = response.data.products;
-      //   return db.put(
-      //     doc
-      //   ).then(function () {
-      //         return db.get('products_01');
-      //   }).then(function (doc) {
-      //         console.log(doc);
-      //   });
-      // }).catch(async err=> {
-      //   console.log('Es nueva', err)
-      //   await db.put({
-      //     _id: 'products_01',
-      //     products: response.data.products,
-      //   }).then(response => {
-      //     console.log('response', response)
-      //   }).catch(error => {
-      //     console.log('Error al guardar en pouchDB ',error)
-      //   })
-      // })
-
-
-
-        // await db.put({
-        //   _id: 'products',
-        //   products: response.data.products,
-        // }).then(response => {
-        //   console.log('response', response)
-        // }).catch(error => {
-        //   console.log('Error al guardar en pouchDB ',error)
-        // })
-      // products.forEach(async product => {
-      //     await db.put({
-      //     _id: JSON.stringify(product.id),
-      //     title: product.title,
-      //   }).catch(error => {
-      //     console.log('Error al guardar en pouchDB ',error)
-      //   })
-      // });
     })
     .catch(async err => {
       console.log('Toma lo productos de pouchDB', err)
@@ -137,6 +79,8 @@ let db;
        online.value = true
     } else{
        online.value = false
+       router.push("/offline")
+
     }
   }
 
