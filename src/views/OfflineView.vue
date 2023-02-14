@@ -4,6 +4,9 @@
   import { nanoid } from 'nanoid';
   import PouchDB from 'pouchdb';
 
+import ListComponent from '@/components/ListComponent.vue';
+import ListProducts from '@/components/ListProducts.vue';
+
 
 
   const items = ref([]);
@@ -15,6 +18,7 @@
   let db;
 
   onMounted(() => {
+
     db = new PouchDB('products');
     db.get('products').then(async function (doc) {
         items.value = await doc.products;
