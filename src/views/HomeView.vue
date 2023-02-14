@@ -3,9 +3,6 @@ import axios from 'axios';
 import PouchDB from 'pouchdb';
 import { ref, onMounted } from 'vue'
 
-
-
-
 const items = ref([]);
 const productsSearch = ref([])
 const online = ref(false)
