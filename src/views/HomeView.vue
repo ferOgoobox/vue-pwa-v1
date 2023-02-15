@@ -103,7 +103,7 @@ let db;
        online.value = true
     } else{
        online.value = false
-       //router.push("/offline")
+       router.push("/offline")
     }
   }
 
