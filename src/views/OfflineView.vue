@@ -58,7 +58,7 @@ import ListProducts from '@/components/ListProducts.vue';
   }
 
   const sincronizar = () =>{
-    console.log('sincronizando......')
+    console.log('sincronizando....')
     router.push('/')
   }
 
